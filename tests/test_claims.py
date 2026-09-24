@@ -45,7 +45,7 @@ def test_readme_structure_follows_the_portfolio_order():
     expected = ["Warum dieses Problem", "Befunde und Korrekturen gegenüber dem Plan", "Modell", "Methodik", "Befunde (gemessen, keine Behauptungen)", "Ehrliche Grenzen",
                 "Verwandte Demos mit demselben mathematischen Modell", "Tests", "Dateistruktur", "Bewusst nicht umgesetzt", "Reproduktion der Messreihen", "Lokal ausführen"]
     assert headings == expected
-    assert README.startswith("# Nahverkehr: Same-Day-Aufträge, Änderungen und der Preis der Planänderung – Streamlit-Demo\n\n*(noch nicht deployed)*\n")
+    assert README.startswith("# Nahverkehr: Same-Day-Aufträge, Änderungen und der Preis der Planänderung – Streamlit-Demo\n\n**[→ Demo live ausprobieren](https://sebastianhanisch-nahverkehr-demo.streamlit.app/)**\n")
     assert README.rstrip().endswith("Gebaut mit Streamlit, Plotly, OR-Tools und fpdf2.")
     assert "@@" not in README and "TODO" not in README and "noch offen" not in README
 

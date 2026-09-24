@@ -1,6 +1,6 @@
 # Nahverkehr: Same-Day-Aufträge, Änderungen und der Preis der Planänderung – Streamlit-Demo
 
-*(noch nicht deployed)*
+**[→ Demo live ausprobieren](https://sebastianhanisch-nahverkehr-demo.streamlit.app/)**
 
 Interaktive Fall-Demo (Tourenplanung): Im Nahverkehr steht der Plan am Morgen, aber der Tag hält sich nicht daran – **neue Aufträge** (Same-Day-Aufträge) kommen herein, teils wenn die Touren schon laufen, und **Aufträge ändern sich**
 (Zeitfenster, Adresse, Menge) oder werden storniert. Die Demo beantwortet: **Wie viel Neuplanung lohnt sich, wenn jede Planänderung etwas kostet – und welche neuen Aufträge nimmt man überhaupt an?** Live auf **einem Tag**
