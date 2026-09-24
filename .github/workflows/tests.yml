@@ -1,0 +1,32 @@
+name: Tests
+
+on:
+  # Woechentlicher Lauf: requirements.txt ist nicht gepinnt (>=), CI und Streamlit Cloud installieren also immer
+  # die neuesten Versionen (auch OR-Tools). So faellt ein Bruch durch ein Streamlit-/Plotly-/OR-Tools-Update auf, bevor
+  # der naechste Push oder Neustart der Demo ihn sichtbar macht. Rote Laeufe meldet demo-health.yml der Website taeglich.
+  # Die Tests rechnen auf eingefrorenen Morgenplaenen (tests/data/nv_morning.json), sie haengen nicht an der OR-Tools-Version.
+  schedule:
+    - cron: "23 6 * * 1"
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Python einrichten
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Abhängigkeiten installieren
+        run: pip install -r requirements-dev.txt
+
+      - name: Tests ausführen
+        run: python -m pytest tests/ -v --durations=10

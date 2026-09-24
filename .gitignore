@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+.venv/
+
+# IDE
+.idea/
+
+# Rohdaten und Zwischenspeicher der Messreihen (tools/sweep*.py schreiben sie neben die Skripte)
+tools/*_raw.json
+tools/sweep_raw*.json
+tools/*_data.json
+tools/cache_morning/
+tools/cache_morning_repeat/
