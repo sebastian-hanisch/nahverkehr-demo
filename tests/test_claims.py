@@ -46,7 +46,8 @@ def test_readme_structure_follows_the_portfolio_order():
                 "Verwandte Demos mit demselben mathematischen Modell", "Tests", "Dateistruktur", "Bewusst nicht umgesetzt", "Reproduktion der Messreihen", "Lokal ausführen"]
     assert headings == expected
     assert README.startswith("# Nahverkehr: Same-Day-Aufträge, Änderungen und der Preis der Planänderung – Streamlit-Demo\n\n**[→ Demo live ausprobieren](https://sebastianhanisch-nahverkehr-demo.streamlit.app/)**\n")
-    assert README.rstrip().endswith("Gebaut mit Streamlit, Plotly, OR-Tools und fpdf2.")
+    paras = README.rstrip().split("\n\n")  # vorletzter Absatz: Bauhinweis, letzter: Portfolio-Footer (set_demo_footer.py)
+    assert paras[-2] == "Gebaut mit Streamlit, Plotly, OR-Tools und fpdf2." and paras[-1].startswith("Diese Demo ist Teil des Portfolios von [Sebastian Hanisch]")
     assert "@@" not in README and "TODO" not in README and "noch offen" not in README
 
 
