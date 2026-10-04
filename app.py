@@ -298,7 +298,7 @@ with st.expander("🔧 Wie wir das erreichen – Politiken im Vergleich"):
         st.dataframe(UI.oracle_sameday_frame(DATA, "frist"), width="stretch", hide_index=True)
         st.markdown("**Annahme nach Auslastung** (16 Instanzen je Zelle):")
         st.dataframe(UI.oracle_sameday_frame(DATA, "auslastung"), width="stretch", hide_index=True)
-        st.caption("Vorsicht: sehr kleine Stichprobe (10 bis 16 Instanzen, Standardfehler 30 bis 120) und das Orakel ist eine **Heuristik** (untere Schranke des echten Optimums, Warmstart aus der besten Online-Lösung), die Lücke ist "
+        st.caption("Vorsicht: sehr kleine Stichprobe (10 bis 16 Instanzen, Standardfehler der angezeigten Lücken 17 bis 120) und das Orakel ist eine **Heuristik** (untere Schranke des echten Optimums, Warmstart aus der besten Online-Lösung), die Lücke ist "
                    "also eher unterschätzt. Das Orakel darf den Morgenplan neu bauen und kennt alle künftigen Aufträge: der Großteil der Lücke ist **Information über künftige Aufträge**, keine Frage der Stabilität. "
                    "Die Lücke wächst mit engen Fristen und hoher Auslastung.")
     with tabs[3]:
