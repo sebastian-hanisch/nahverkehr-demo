@@ -200,3 +200,5 @@ Fehlende Morgenpläne für neue Tests trägt `NV_RECORD_MORNING=1 python -m pyte
 ---
 
 Gebaut mit Streamlit, Plotly, OR-Tools und fpdf2.
+
+Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). Mehr zum Thema: [Tourenplanung optimieren](https://sebastianhanisch.net/tourenplanung-optimierung.html).
