@@ -6,14 +6,14 @@ Interaktive Fall-Demo (Tourenplanung): Im Nahverkehr steht der Plan am Morgen, a
 (Zeitfenster, Adresse, Menge) oder werden storniert. Die Demo beantwortet: **Wie viel Neuplanung lohnt sich, wenn jede Planänderung etwas kostet – und welche neuen Aufträge nimmt man überhaupt an?** Live auf **einem Tag**
 (Morgenplan mit OR-Tools, Ereignisstrom, alle Politiken über denselben Tag, mit Zeitstrahl der Ereignisse und der Änderungen je Ereignis, Karte und Halteliste) und **vorgerechnet** über 200 bzw. 60 gepaarte Tage, die die Aussage tragen.
 
-Teil des Portfolios für die Website „Sebastian Hanisch – Operations Research und Machine Learning". **Erweiterung der Tourenplanungs-Demo** (`vrp_demo`), aus zwei Vorab-Messreihen verschmolzen: `messreihe_sameday` (welche neuen
+Teil des Portfolios für die Website „Sebastian Hanisch – Operations Research und Machine Learning“. **Erweiterung der Tourenplanungs-Demo** (`vrp_demo`), aus zwei Vorab-Messreihen verschmolzen: `messreihe_sameday` (welche neuen
 Aufträge annehmen?) und `messreihe_stabilitaet` (wie viel Neuplanung lohnt, wenn jede Planänderung etwas kostet?). Beide laufen auf demselben Simulator; ohne Änderungsereignisse liefert die Stabilitäts-Simulation **bitgleich** die
 Zahlen der Same-Day-Messreihe (Test). Alle Instanzen sind deterministisch (Seed), die Streuung kommt aus der Stichprobe von Tagen.
 
 ## Warum dieses Problem
 
-Das Muster „starrer Plan gegen reaktives Nachplanen" gibt es im Portfolio schon (`fahrzeugflotte-demo`, `robuste-kaiplatz-demo`, `blockzuweisung-demo`, `hofrobust-demo`): dort ist die Neuplanung kostenlos oder die Unruhe nur gezählt. Neu ist hier
-**die Achse „Stabilität wird bepreist und gemessen"**: jede Planänderung (Fahrer informieren, Kunden neue Zeiten ansagen) hat einen Preis, drei Maße zählen, was als Änderung gilt, und die Kurve **Gewinn gegen Änderungen** zeigt, wie
+Das Muster „starrer Plan gegen reaktives Nachplanen“ gibt es im Portfolio schon (`fahrzeugflotte-demo`, `robuste-kaiplatz-demo`, `blockzuweisung-demo`, `hofrobust-demo`): dort ist die Neuplanung kostenlos oder die Unruhe nur gezählt. Neu ist hier
+**die Achse „Stabilität wird bepreist und gemessen“**: jede Planänderung (Fahrer informieren, Kunden neue Zeiten ansagen) hat einen Preis, drei Maße zählen, was als Änderung gilt, und die Kurve **Gewinn gegen Änderungen** zeigt, wie
 schnell sich zusätzliche Änderungen nicht mehr lohnen. Die Vorab-Hypothese, ausdrücklich zu prüfen: wenige Änderungen holen fast den ganzen Nutzen der vollen Neuoptimierung. Sie stimmt – **aber nur für einen Preis in der
 Entscheidung (Änderungsstrafe), nicht für den naheliegenden Einfrierhorizont**. Die Hauptansicht formuliert deshalb eine **bedingte Aussage in drei Zuständen** (volle Neuplanung lohnt / hier lohnt ein Preis je Änderung /
 volle Neuplanung verliert gegen den starren Plan) aus der vorgerechneten Netto-Tabelle und stellt sie neben den einen gezeigten Tag: ein einzelner Tag streut stark.
@@ -22,21 +22,21 @@ volle Neuplanung verliert gegen den starren Plan) aus der vorgerechneten Netto-T
 
 Die App folgt dem Detailplan (`plan_nahverkehr.html`, Arbeitspakete 0 bis 7; die Integration in die Website ist nicht Teil dieses Bausteins). Abweichungen und Präzisierungen, ehrlich benannt:
 
-- **Der Orakel-Aufruf für den Morgenplan steht in `nv_model.py`, das Orakel mit Änderungen in `nv_oracle.py`.** Der Plan sah `nv_oracle` für „das Orakel" vor; `build_morning` braucht aber den OR-Tools-Aufruf für den Morgenplan, und ein Import von `nv_oracle`
+- **Der Orakel-Aufruf für den Morgenplan steht in `nv_model.py`, das Orakel mit Änderungen in `nv_oracle.py`.** Der Plan sah `nv_oracle` für „das Orakel“ vor; `build_morning` braucht aber den OR-Tools-Aufruf für den Morgenplan, und ein Import von `nv_oracle`
   in `nv_model` wäre ein Zyklus. Die Logik ist mechanisch aus `stab.py` übernommen und unverändert.
 - **Der Festplatten-Zwischenspeicher der Morgenpläne ist in der App aus** (`nv_model.MORNING_DISK_CACHE = None`, Streamlit Cloud darf nicht schreiben); zwischengespeichert wird im Speicher und über `st.cache_data`. Nur die Umgebungsvariable
   `NV_MORNING_CACHE` (setzt `tools/sweep.py` für die Mehrprozess-Reproduktion) schaltet ihn wieder ein.
 - **Die Live-Rechnung startet automatisch mit Spinner** (Ergebnis je Einstellung zwischengespeichert), nicht über einen eigenen Knopf. Ein Tag braucht auf dem Entwicklungsgerät 0,6 s (16 Morgenaufträge) bis 3,7 s (52), davon der Morgenplan fast alles;
   auf einem langsameren Server entsprechend länger. Die Kosten je Änderung und die Anzeigewahl rechnen nichts neu.
-- **Der „beste Regler" der Hauptansicht ist der in der Messreihe für die eingestellten Kosten beste** (höchster Netto-Gewinn, aus den Politik-Mittelwerten der Zelle für jede beliebige Kostenstufe neu gerechnet, gleich der gespeicherten Netto-Tabelle) und wird dann
+- **Der „beste Regler“ der Hauptansicht ist der in der Messreihe für die eingestellten Kosten beste** (höchster Netto-Gewinn, aus den Politik-Mittelwerten der Zelle für jede beliebige Kostenstufe neu gerechnet, gleich der gespeicherten Netto-Tabelle) und wird dann
   auf dem gezeigten Tag gerechnet; nicht der auf diesem einen Tag zufällig beste (das wäre Rosinenpicken).
 - **Zell-Zuordnung:** die Stufen der Regler (16 / 28 / 40 / 52 Morgenaufträge, Rate 0 / 2 / 6 / 12, fünf Ereignisstufen, Frist 60 / 120 / 240) sind gemessene Zellen, aber die Messreihe variiert je Zelle nur **einen** Parameter ausgehend vom Basisfall (13 Zellen
   liegen ganz auf den Stufen). Für jede andere Kombination zeigt die Vergleichsspalte die nächstliegende gemessene Zelle (Abstand = Summe der Stufenabstände; Gleichstand: die Zelle des früheren Parameters in der Reihenfolge Rate, Morgenaufträge,
   Ereignisse, Frist) **und sagt es** (Hinweis in der Meldung und im Kernabschnitt). Für die Annahme gilt dasselbe mit Abstand in Rohgrößen (die Annahme-Messreihe hat 21 passende Zellen inklusive der Rasterzellen 24 / 40 / 52 Morgenaufträge mal Rate 2 / 6 / 12).
-- **Bei Rate 0 gibt es keine neuen Aufträge und damit nichts anzunehmen:** der Kernabschnitt „Welche Aufträge annehmen?" sagt das, statt sechs gleiche Zahlen zu zeigen (die Annahme-Messreihe kennt keine Rate 0).
+- **Bei Rate 0 gibt es keine neuen Aufträge und damit nichts anzunehmen:** der Kernabschnitt „Welche Aufträge annehmen?“ sagt das, statt sechs gleiche Zahlen zu zeigen (die Annahme-Messreihe kennt keine Rate 0).
 - **Die Annahme-Regeln laufen live auf demselben Tag ohne Änderungsereignisse** (die Messreihe der Annahme kennt keine); der Schwellenwert µ kommt aus der Kalibriertabelle der nächstliegenden gemessenen Zelle.
 - **Kosten je Änderung sind ein Regler in 0,5er-Schritten** (0 bis 20); die Netto-Tabelle rechnet jede Stufe exakt aus den Mittelwerten, nicht nur die Stufen des Rasters der Messreihe.
-- **Rundungsdifferenz der Vorab-Messung:** `ERGEBNIS.md` der Annahme-Messreihe nennt P1p mit „707 ± 28", der Mittelwert der Rohzahlen ist 706,5 und rundet auf 706; die App und diese README zeigen 706.
+- **Rundungsdifferenz der Vorab-Messung:** `ERGEBNIS.md` der Annahme-Messreihe nennt P1p mit „707 ± 28“, der Mittelwert der Rohzahlen ist 706,5 und rundet auf 706; die App und diese README zeigen 706.
 
 ## Modell
 
@@ -48,7 +48,7 @@ einen noch nicht bindenden Auftrag (bindend: das Fahrzeug muss spätestens losge
 S0 kein Neuoptimieren · R volle Neuoptimierung nach jedem Ereignis · F_k die nächsten k Stopps je Fahrzeug fest · P_λ Zug nur, wenn die Fahrzeitersparnis größer ist als λ × zusätzlich geänderte Stopps · T_x nur alle x Minuten · H_h Stopps der nächsten
 h Minuten fest (nur vorgerechnet). **Stabilitätsmaße:** (a) fahrerseitig (Hauptmaß): noch nicht gefahrene Stopps mit anderem Fahrzeug oder Vorgänger, der Ereignisauftrag ausgenommen, S0 damit exakt 0; (b) kundenseitig: angesagte Ankunftszeiten, die sich
 um mehr als 15 min ändern; (c) Neuplanungsereignisse mit mindestens einer Änderung. **Gewinn:** Erlös der bedienten Same-Day-Aufträge + 60 je bedientem Morgenauftrag − Fahrminuten − 60 je nicht mehr bedienbarem Auftrag. **Kosten je Änderung stehen nicht im
-gemessenen Gewinn:** sie werden nachträglich als Netto-Tabelle angesetzt (Netto = Gewinn − Kosten × Änderungen) und sind **nicht** der Reglerparameter λ (Entscheidungsstrafe). Formal im Expander „📐 Mathematische Formulierung" der App.
+gemessenen Gewinn:** sie werden nachträglich als Netto-Tabelle angesetzt (Netto = Gewinn − Kosten × Änderungen) und sind **nicht** der Reglerparameter λ (Entscheidungsstrafe). Formal im Expander „📐 Mathematische Formulierung“ der App.
 
 **Modellzuordnung:** dynamisches Tourenproblem mit Same-Day-Aufträgen (sofortige Annahmeentscheidung, Einfügebewertung plus Schwelle) und Auftragsänderungen; die Referenz ist das offline Prize-Collecting-VRPTW (Hindsight-Orakel).
 
@@ -74,7 +74,7 @@ Alle Zahlen stehen in `data/nv_results.json` und werden in `tests/test_claims.py
 | Wovon hängt die Größe ab? | Von der Last: Rate 0 / 2 / 6 / 12 je Stunde: R − S0 = +10,8 / +34 / +123 / +233; Frist 60 / 120 / 240 min: +79 / +123 / +181; Morgenaufträge 16 / 28 / 40 / 52: +152 / +150 / +123 / +118. Kein Vorzeichenwechsel: in allen 28 Zellen ist R mehr als 2 Standardfehler besser als der starre Plan. |
 | Kommt der Nutzen von den Änderungen? | **Nein, von den neuen Aufträgen:** ohne jedes Änderungsereignis bringt R +84,7 ± 9,5, mit Änderungen und Stornos +123,0, bei Rate 0 (nur Änderungen und Stornos) nur +10,8. |
 | Was kosten Änderungen und Stornos selbst? | Der Tag verliert gegenüber demselben Tag ohne Ereignisse mit S0 228 ± 12, mit R 190 ± 13; Neuplanung holt davon 38 ± 13 (17 %) zurück. Reine Stornos: Neuplanung hilft nicht (−6 ± 15). |
-| Welche Annahmeregel? | Gewinn gegenüber „nie annehmen" (60 Tage): P1 618 ± 29, P1p 706 ± 28, **Zeit-Schattenpreis P2 758 ± 33**; P2 − P1p = +51 ± 13, die reine Erlös-Schwelle à la Littlewood P2v − P1p = −14 ± 11 (überträgt sich nicht auf das Straßennetz); Neuoptimieren P1pL − P1p = +77 ± 14, Schwelle auf Neuoptimierung P2L − P1pL = +15 ± 16 (nicht nachweisbar). |
+| Welche Annahmeregel? | Gewinn gegenüber „nie annehmen“ (60 Tage): P1 618 ± 29, P1p 706 ± 28, **Zeit-Schattenpreis P2 758 ± 33**; P2 − P1p = +51 ± 13, die reine Erlös-Schwelle à la Littlewood P2v − P1p = −14 ± 11 (überträgt sich nicht auf das Straßennetz); Neuoptimieren P1pL − P1p = +77 ± 14, Schwelle auf Neuoptimierung P2L − P1pL = +15 ± 16 (nicht nachweisbar). |
 | Wie groß ist der Rest zum Rückblick-Orakel? | Annahme (16 Instanzen): Orakel 1175 ± 81, die je Instanz beste Online-Regel holt 836, Lücke 339 ± 53; nach Frist 45 / 90 / 180 / 300 min holt sie 54 / 64 / 82 / 91 % des Orakels. Mit Änderungen (10 Instanzen): Lücke zu R 582 ± 102 (20 % des Orakel-Gewinns), überwiegend Information über künftige Aufträge, nicht Stabilität. |
 | Trägt ein fest kalibrierter Schwellenwert? | Nein: die in der Basiszelle kalibrierte Schwelle in andere Regime übertragen kippt das Vorzeichen (16 Morgenaufträge: P2 − P1p = −97 ± 26, kalibriert +0 ± 0). |
 
@@ -83,12 +83,12 @@ Alle Zahlen stehen in `data/nv_results.json` und werden in `tests/test_claims.py
 - **Der Betrag ist klein:** die volle Neuplanung bringt rund 5 % Gewinn. Die Aussage ist der Vergleich der Regler und der Preis der Änderung, nicht die Größe; erst bei nennenswerten Kosten je Änderung (ab etwa 1) wird die Wahl des Reglers wichtig.
 - **Die Strafe optimiert das Maß (a) selbst mit**, ihr Vorsprung dort ist teilweise per Konstruktion; unter dem kundenseitigen Maß (b) ist er nur in 13 / 10 von 28 Zellen belastbar. Dass die Strafe Züge nach Nutzen je Änderung rangiert, während Einfrieren und Periodik nach
   Ort bzw. Zeit sperren, ist **abgeleitet, nicht getestet**.
-- **Die Kosten je Änderung wurden nachträglich angesetzt**, nicht in der Entscheidung gemessen (sie sind nicht λ); ein Version 2 könnte mit echten Kosten simulieren. Die „beste Politik je Kosten" ist im Stichprobendurchschnitt gewählt, also leicht optimistisch.
+- **Die Kosten je Änderung wurden nachträglich angesetzt**, nicht in der Entscheidung gemessen (sie sind nicht λ); ein Version 2 könnte mit echten Kosten simulieren. Die „beste Politik je Kosten“ ist im Stichprobendurchschnitt gewählt, also leicht optimistisch.
 - **Stark stilisiert:** deterministische Fahrzeiten, eine Tour je Fahrzeug, Ereignisse unabhängig je Auftrag und höchstens eines je Auftrag, Bindung ab Abfahrt (keine Umleitung mitten auf der Strecke), keine Rechenzeitkosten. Erlöse und Strafen sind erfunden.
 - **Stornokosten sind großenteils Erlösverlust** (60 je Morgenauftrag) und sagen nichts über die Wirkung der Neuplanung; die Strafe 60 für gescheiterte Aufträge ist gesetzt, nicht kalibriert.
-- **Das Orakel ist klein und heuristisch:** 10 (Änderungen) bzw. 16 (Annahme) Instanzen je Zelle, OR-Tools mit Warmstart aus der besten Online-Lösung (das macht „Orakel ≥ Online" per Konstruktion wahr; belegt wird die Schranke durch Brute-Force auf Kleinstinstanzen). Die
+- **Das Orakel ist klein und heuristisch:** 10 (Änderungen) bzw. 16 (Annahme) Instanzen je Zelle, OR-Tools mit Warmstart aus der besten Online-Lösung (das macht „Orakel ≥ Online“ per Konstruktion wahr; belegt wird die Schranke durch Brute-Force auf Kleinstinstanzen). Die
   Lücke ist eher unterschätzt.
-- **Ein einzelner Tag streut stark** und ist kein Beleg; die Live-Zahlen tragen die Überschrift „ein Tag", die Meldung stützt sich auf die vorgerechnete Messreihe.
+- **Ein einzelner Tag streut stark** und ist kein Beleg; die Live-Zahlen tragen die Überschrift „ein Tag“, die Meldung stützt sich auf die vorgerechnete Messreihe.
 - **Mehrfachvergleiche:** 28 Zellen mal viele gepaarte Vergleiche auf gemeinsamen Seeds 0 bis 199; einzelne Ausschläge sind zu erwarten. Wechselwirkungen zwischen den Parametern sind nicht gemessen (Ein-Faktor-Sweeps um den Basisfall).
 
 ## Verwandte Demos mit demselben mathematischen Modell
@@ -96,7 +96,7 @@ Alle Zahlen stehen in `data/nv_results.json` und werden in `tests/test_claims.py
 Verschiedene Themen im Portfolio teilen (fast) dasselbe Modell. Vor einer neuen Demo-Idee deshalb das Modell vergleichen, nicht die Kulisse (Stand 2026-09-24):
 
 - **`vrp_demo`** – das **Basismodell**: CVRP mit Zeitfenstern, dort ein Vergleich von Tourenheuristiken. Hier bleibt die Geometrie (Depot, Zeitfenster, Einfügen und lokale Suche über Touren), neu ist der Tag als Ereignisstrom mit Annahme, Änderungen und Stornos.
-- **Das Muster „starrer Plan gegen reaktives Nachplanen"** in **`fahrzeugflotte-demo`**, **`robuste-kaiplatz-demo`**, **`blockzuweisung-demo`** und **`hofrobust-demo`**: dort ist die Störung exogen (Ausfall, Verspätung, Fahrzeitrauschen) und die Neuplanung kostenlos oder die Unruhe nur
+- **Das Muster „starrer Plan gegen reaktives Nachplanen“** in **`fahrzeugflotte-demo`**, **`robuste-kaiplatz-demo`**, **`blockzuweisung-demo`** und **`hofrobust-demo`**: dort ist die Störung exogen (Ausfall, Verspätung, Fahrzeitrauschen) und die Neuplanung kostenlos oder die Unruhe nur
   gezählt. **Hier neu: der bepreiste Stabilitätsaspekt** – jede Planänderung hat einen Preis, drei Maße zählen sie, und die Kurve Gewinn gegen Änderungen vergleicht Strafe, Stopp-Horizont, Zeit-Horizont und Periode. Kein Regime-Widerspruch wie bei `hofrobust-demo`: das Vorzeichen des
   Neuplanungsnutzens bleibt in allen 28 Zellen gleich, nur die Größenordnung ändert sich.
 - **`revenue-management-demo`** – die **Annahme ohne Geometrie** (Littlewood, eine Kapazitätsdimension); hier kommt die Geometrie (Einfügekosten, Route, Zeitfenster) hinzu, und Littlewoods Erlös-Schutzniveau überträgt sich gerade nicht (P2v − P1p = −14 ± 11).
@@ -105,7 +105,7 @@ Verschiedene Themen im Portfolio teilen (fast) dasselbe Modell. Vor einer neuen 
 
 ## Tests
 
-`python -m pytest tests/ -v` – 366 Tests, rund 2,5 Minuten (davon etwa eine Minute AppTests). **Alle Tests rechnen auf EINGEFRORENEN Morgenplänen** (`tests/data/nv_morning.json`): die CI installiert immer das neueste OR-Tools, und Morgenpläne können
+`python -m pytest tests/ -v` – 369 Tests, rund 2,5 Minuten (davon etwa eine Minute AppTests). **Alle Tests rechnen auf EINGEFRORENEN Morgenplänen** (`tests/data/nv_morning.json`): die CI installiert immer das neueste OR-Tools, und Morgenpläne können
 sich zwischen Versionen ändern; ein Test, der OR-Tools für den Morgenplan bräuchte, scheitert mit einer klaren Meldung (`conftest.py`), fehlende Pläne trägt `NV_RECORD_MORNING=1 python -m pytest tests/` lokal nach. Nur `test_morning_real.py` rechnet mit dem echten OR-Tools und prüft
 ausschließlich Invarianten (gültig, nicht schlechter als die Heuristik, deterministisch innerhalb eines Laufs), keine exakten Routen. Zusammensetzung:
 
@@ -113,6 +113,7 @@ ausschließlich Invarianten (gültig, nicht schlechter als die Heuristik, determ
   (Gleichstände erzeugen nie Änderungen), keine Ereignisse (alle Politiken gleich dem Morgenplan, Zähler 0), exakte Grenzfälle (F_alle = T_∞ = H_∞ = S0, F_0 = P_0 = T_0 = H_0 = R), Idempotenz der Neuoptimierung, Invarianten (Endplan gültig, bindender Präfix unverändert,
   Gewinn unabhängig nachgerechnet, Endplan im Orakel-Modell zulässig), **jede Politik und jeder Zähler greift** (Zweig-Test gegen die Nullspalten-Falle), Brute-Force auf Kleinstinstanzen, Orakel als obere Schranke. Das **volle Bau-Gate** (`python tools/check_full.py`, mit dem echten
   OR-Tools) lief einmal lokal: 466 Sekunden, alle Checks bestanden, mit denselben Zahlen wie in der Messreihe (187 Ausfälle, 1190 Stornos, 2625 Änderungen, 2345 ignorierte Ereignisse in den Invarianten-Läufen; Ereignisanteil 0,328).
+- **Unabhängiges Orakel** (`test_oracle_nahverkehr.py`, ohne OR-Tools): ein zweiter Rechenweg auf Zufallsinstanzen – eigene Fahrzeitmatrix, eigener Zeitplan und Vollneuberechnung der Fahrzeit statt Delta-Formeln. Die Einfügekandidaten sind gleich denen der Demo; eine eigene Tagessimulation ohne Neuplanung (Annahme, Änderungen, Stornos, Maße (a) (b) (c), Gewinn) liefert dieselben Routen, Zeiten und Zähler wie `run_events` mit S0; nach der lokalen Suche gibt es unter allen Relocate-, Swap-, 2-opt\*- und 2-opt-Zügen keinen zulässigen, verbessernden Zug mehr (Brute-Force-Aufzählung).
 - **Bitgleichheit zur Messreihe** (`test_frozen_reference.py`, `tests/data/nv_reference.json`): die reine Simulation auf den eingefrorenen Morgenplänen reproduziert **exakt** die Rohzahlen der Sweeps – alle 21 Politiken mit 14 Kennzahlen für 9 Zellen (Basis, Rate 12, Frist 60, viele
   Ereignisse, Rate 0, 16 Morgenaufträge, alle drei Änderungsarten mit Kapazität, 2 Fahrzeuge, ohne Ereignisse), der Zusatzlauf H, und die Annahmeregeln P0 bis P2L (mit den kalibrierten Schwellenwerten) samt Rollout für 7 Zellen. Dazu: **ohne Änderungsereignisse ist S0 = P1p und R = P1pL**
   bitgleich zwischen den beiden Messreihen. Der Nachweis, dass die mechanische Aufteilung von `stab.py` in drei Module nichts an der Logik geändert hat.
@@ -122,7 +123,7 @@ ausschließlich Invarianten (gültig, nicht schlechter als die Heuristik, determ
   Schwellen, Zell-Zuordnung; **jede Zahl dieser README**.
 - **Presets** (`test_stories.py`, `test_preset_stories.py`, `test_presets.py`): jedes Abnahmekriterium kippt an künstlichen Werten genau an seiner Schwelle, Vorzeichen-Kriterien nur zusammen mit der Standardfehler-Bedingung; die echten Presets erfüllen sie auf den Messreihen, der gezeigte Tag
   erzählt qualitativ dieselbe Geschichte, alle drei Meldungszustände kommen vor; Permalink-Parsing (Begrenzen, Einrasten, Müll).
-- **Live-Rechnung, Figuren, PDF** (`test_live.py`, `test_visualization.py`, `test_ui_panel.py`, `test_pdf_export.py`): der Live-Tag gleich der direkten Simulation, Tagesverlauf und Ereigniszähler, alle Achsen `fixedrange`, keine Farblisten, Tabellen gegen die Daten, PDF mit den genauen Sonderzeichen (fpdf2 stürzt bei „–", „€", Emoji und
+- **Live-Rechnung, Figuren, PDF** (`test_live.py`, `test_visualization.py`, `test_ui_panel.py`, `test_pdf_export.py`): der Live-Tag gleich der direkten Simulation, Tagesverlauf und Ereigniszähler, alle Achsen `fixedrange`, keine Farblisten, Tabellen gegen die Daten, PDF mit den genauen Sonderzeichen (fpdf2 stürzt bei „–“, „€“, Emoji und
   dem Unicode-Minus ab).
 - **Werkzeuge** (`test_tools.py`): die Kette Rohdaten → `dump_sweep` → `build_results` auf künstlichen Rohdaten, die Zellenlisten der Sweeps gleich den gemessenen Zellen, Wiederaufbau der Ergebnisdatei aus den Quellen (lokal, wenn vorhanden), Vollständigkeit der Mutantenliste.
 - **End-to-End** (`test_app.py`, AppTest): Skelett und Footer, jedes Preset, Permalink, alle Regler an Min und Max, kein toter Regler, alle drei Meldungszustände, Zell-Zuordnung mit Hinweis, Rate 0, Kernabschnitte, Ansichten, PDF. Die Live-Rechnung läuft auf eingefrorenen Plänen, ohne Wall-Clock-Assertions.
