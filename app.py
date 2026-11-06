@@ -69,6 +69,17 @@ ohne Geometrie zeigt `revenue-management-demo`. Wie das Modell funktioniert, ste
 """
 )
 
+# erklaerseite:einfach:start (erzeugt von tools/set_demo_explainer.py (Website-Repo) aus tools/content/explainers/same-day-auftraege-erklaert.json, nicht von Hand ändern)
+with st.expander("💬 In einfachen Worten"):
+    st.markdown(
+        """
+Im Nahverkehr steht der Plan am Morgen, doch der Tag hält sich nicht daran. Neue Aufträge kommen herein, Kunden ändern Zeiten oder Adressen, andere sagen ab. Die Demo spielt so einen Tag durch. Sie vergleicht, welche neuen Aufträge man annimmt und wie viel man den Plan danach neu ordnet. Jeder umgesteckte Stopp kostet etwas, denn Fahrer und Kunden müssen es erfahren. Gezeigt wird ein einzelner Tag, und der streut stark. Die Aussage tragen die vorgerechneten Messreihen über viele Beispieltage. Neuplanung bringt im Beispielmodell nur einen kleinen Gewinn, und eine Strafe je Änderung in der Entscheidung holt davon im Mittel das meiste mit weniger Änderungen. Alle Zahlen sind erfunden und stark vereinfacht. Sie zeigen Richtung und Reihenfolge, keine Werte eines echten Betriebs.
+
+[Ausführlich und verständlich erklärt, mit Fachteil](https://sebastianhanisch.net/same-day-auftraege-erklaert.html)
+        """
+    )
+# erklaerseite:einfach:end
+
 st.caption("🎯 Schnellstart – ein Beispielszenario laden:")
 preset_names = list(C.PRESETS)
 for row in (preset_names[:3], preset_names[3:]):
@@ -351,6 +362,29 @@ Neuplanung verliert gegen den starren Plan“ (R netto unter S0). **Die Stufen d
     )
 
 with st.expander("📐 Mathematische Formulierung"):
+    # erklaerseite:lesehilfe:start (erzeugt von tools/set_demo_explainer.py (Website-Repo) aus tools/content/explainers/same-day-auftraege-erklaert.json, nicht von Hand ändern)
+    st.markdown(
+        r"""
+**Lesehilfe.** Gegeben sind ein Depot mit drei Transportern, ein Morgenplan und ein Strom von Ereignissen (neue Aufträge, Änderungen, Stornos). Gesucht sind die Annahmeregel für neue Aufträge und die Neuplanungsregel, bei denen der Gewinn nach Abzug der Kosten je Planänderung am größten ist.
+
+| Symbol | Bedeutung |
+|---|---|
+| $r_i$ | Erlös des neuen Auftrags $i$ |
+| $\Delta c_i$ | Zusatzfahrminuten durch Auftrag $i$ |
+| $\Delta e_i$ | zusätzliche Rückkehrzeit des gewählten Fahrzeugs |
+| $\mu$ | Schattenpreis der Zeit (Schwelle der Annahmeregel P2) |
+| $w(t)$ | Gewicht der Zeit, fällt von 1 auf 0 über das Ankunftsfenster von 300 Minuten |
+| $t$ | Zeitpunkt des Ereignisses in Minuten |
+| $\Delta(m)$ | Fahrzeitersparnis des Zuges $m$ der lokalen Suche |
+| $c(m)$ | Zahl der durch den Zug $m$ zusätzlich geänderten Stopps |
+| $\lambda$ | Strafe je zusätzlich geändertem Stopp in der Entscheidung (Regler $\mathrm{P}_\lambda$) |
+| $G(\pi)$, $A(\pi)$ | Gewinn und Zahl der Planänderungen des Reglers $\pi$ |
+| $c$ bzw. $\kappa$ | Kosten je Planänderung in der Bewertung (die Erklärseite schreibt $\kappa$), nicht gleich $\lambda$ |
+
+[Schritt für Schritt erklärt, mit Herleitung und Literatur](https://sebastianhanisch.net/same-day-auftraege-erklaert.html#fachleute)
+        """
+    )
+    # erklaerseite:lesehilfe:end
     st.markdown(
         r"""
 **Ereignisse und Plan.** Ereignis $e$ zur Zeit $t_e$: Auftrag $i$ neu (Erlös $r_i$, Frist $\delta$), geändert ($i \to i'$ mit neuen Attributen) oder storniert. Der Plan $x_t$ besteht aus den Touren der noch nicht gefahrenen Stopps; ein Stopp $j$ ist
