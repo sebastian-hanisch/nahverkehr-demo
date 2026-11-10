@@ -4,7 +4,7 @@
 
 Interaktive Fall-Demo (Tourenplanung): Im Nahverkehr steht der Plan am Morgen, aber der Tag hält sich nicht daran – **neue Aufträge** (Same-Day-Aufträge) kommen herein, teils wenn die Touren schon laufen, und **Aufträge ändern sich**
 (Zeitfenster, Adresse, Menge) oder werden storniert. Die Demo beantwortet: **Wie viel Neuplanung lohnt sich, wenn jede Planänderung etwas kostet – und welche neuen Aufträge nimmt man überhaupt an?** Live auf **einem Tag**
-(Morgenplan mit OR-Tools, Ereignisstrom, alle Politiken über denselben Tag, mit Zeitstrahl der Ereignisse und der Änderungen je Ereignis, Karte und Halteliste) und **vorgerechnet** über 200 bzw. 60 gepaarte Tage, die die Aussage tragen.
+(Morgenplan mit OR-Tools, Ereignisstrom, alle Politiken über denselben Tag, mit Zeitstrahl der Ereignisse und der Änderungen je Ereignis, Karte und Halteliste) und **vorgerechnet** über 200 bzw. 60 gepaarte Tage, die die Aussage belegen.
 
 Teil des Portfolios für die Website „Sebastian Hanisch – Operations Research und Machine Learning“. **Erweiterung der Tourenplanungs-Demo** (`vrp_demo`), aus zwei Vorab-Messreihen verschmolzen: `messreihe_sameday` (welche neuen
 Aufträge annehmen?) und `messreihe_stabilitaet` (wie viel Neuplanung lohnt, wenn jede Planänderung etwas kostet?). Beide laufen auf demselben Simulator; ohne Änderungsereignisse liefert die Stabilitäts-Simulation **bitgleich** die

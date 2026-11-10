@@ -5,7 +5,7 @@ Sebastian Hanisch - Operations Research und Machine Learning
 Erweiterung der Tourenplanungs-Demo (vrp_demo): Im Nahverkehr steht der Plan am Morgen, aber der Tag hält sich nicht daran - neue Aufträge kommen
 herein, Aufträge ändern sich oder werden storniert. Live: EIN Tag (Morgenplan mit OR-Tools, Ereignisstrom), alle Politiken (starrer Plan S0, volle
 Neuplanung R, Einfrierhorizont F, Änderungsstrafe P, periodisch T) laufen über denselben Tag. Vorgerechnet: die Messreihen über 200 bzw. 60 Tage
-(data/nv_results.json), die die Aussage über den Preis der Planänderung und die Annahme neuer Aufträge tragen.
+(data/nv_results.json), die die Aussage über den Preis der Planänderung und die Annahme neuer Aufträge belegen.
 
 Lauffähig mit: streamlit run app.py
 """
@@ -133,7 +133,7 @@ with st.spinner(f"Rechne den Tag: Morgenplan mit {morning} Aufträgen (OR-Tools)
 st.markdown("## 📦 Wie viel Neuplanen lohnt, wenn jede Planänderung etwas kostet?")
 st.caption(f"Live-Tag (ein Tag, ein Ereignisstrom): Seed {day['seed']}, {day['n_morning']} Morgenaufträge, {day['n_arrivals']} neue Aufträge, {day['n_events']} Änderungen und Stornos "
            f"(Änderungen und Stornos: {events}), Frist {deadline} min, Plan-Auslastung {F.fmt_num(day['plan_util'], 2)}. Alle Politiken gerechnet in {F.fmt_num(day['seconds'])} s "
-           "(davon der Morgenplan " + F.fmt_num(day["seconds_morning"]) + " s). Ein einzelner Tag – die vorgerechnete Messreihe unten trägt die Aussage.")
+           "(davon der Morgenplan " + F.fmt_num(day["seconds_morning"]) + " s). Ein einzelner Tag – die vorgerechnete Messreihe unten belegt die Aussage.")
 
 metric_rows = [st.columns(2), st.columns(2)]
 UI.render_metrics(metric_rows[0] + metric_rows[1], day, best, cost)
@@ -300,7 +300,7 @@ with st.expander("🔧 Wie wir das erreichen – Politiken im Vergleich"):
         )
         st.dataframe(UI.policy_table(day, cost), width="stretch", hide_index=True)
         st.caption("S0 hat bei (a) und (c) per Definition 0 (sie ändert nie andere Stopps), bei (b) nicht: Einfügungen verschieben auch bei S0 angesagte Zeiten. Ein einzelner Tag: Unterschiede zwischen Politiken sind hier oft null, "
-                   "weil auf einem Tag nur wenige Züge zur Wahl stehen – die Messreihe trägt die Aussage.")
+                   "weil auf einem Tag nur wenige Züge zur Wahl stehen – die Messreihe belegt die Aussage.")
     with tabs[2]:
         st.markdown("Das **Rückblick-Orakel** kennt alle Ereignisse vorab (Prize-Collecting-Tourenplanung mit OR-Tools). Es wird **nie live** gerechnet (25 bis 70 Sekunden je Instanz), hier stehen nur die vorgerechneten Zahlen.")
         st.markdown("**Mit Änderungen** (Stabilitäts-Messreihe, 10 Instanzen je Zelle):")
@@ -347,7 +347,7 @@ Der **Reglerparameter λ** ist die **Strafe in der Entscheidung** der Politik P_
 **Gewinn.** Erlös der bedienten Same-Day-Aufträge + {CFG.rev_mean:.0f} je bedientem Morgenauftrag − Fahrminuten − {CFG.pen} je nach einer Änderung nicht mehr bedienbarem Auftrag. Erlöse und Strafen sind **erfunden, nicht kalibriert**: Gewinne sind Größenordnungen.
 
 **Warum Live-Tag und Messreihe nebeneinanderstehen.** Ein einzelner Tag streut stark (der Gewinn der vollen Neuplanung ist schief verteilt: Median unter Mittel, {F.fmt_num(100 - 100 * _BASE['R_dist']['share_pos'], 0)} % der Tage verlieren). Live macht den Tagesverlauf anfassbar, die Mittelwerte
-über 200 Tage tragen die Aussage. Die Meldung stützt sich deshalb auf die **vorgerechnete Netto-Tabelle**: „volle Neuplanung lohnt“ (der beste Regler gewinnt höchstens 10 % mehr als R), „hier lohnt ein Preis je Änderung“ (mehr als 10 %) oder „volle
+über 200 Tage belegen die Aussage. Die Meldung stützt sich deshalb auf die **vorgerechnete Netto-Tabelle**: „volle Neuplanung lohnt“ (der beste Regler gewinnt höchstens 10 % mehr als R), „hier lohnt ein Preis je Änderung“ (mehr als 10 %) oder „volle
 Neuplanung verliert gegen den starren Plan“ (R netto unter S0). **Die Stufen der Regler sind gemessene Zellen**; die Messreihe variiert je Zelle nur einen Parameter ausgehend vom Basisfall, für Kombinationen zeigt die App die nächstliegende gemessene Zelle und sagt es.
 
 **Grenzen dieses Modells** (bewusst so gewählt, damit die Aussage ehrlich bleibt):

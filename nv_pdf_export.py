@@ -126,7 +126,7 @@ def generate_nv_pdf(settings, day, view, best, cost, message_text, note, cell_te
         "Stark stilisiert: 60 x 60 km, ein Depot, drei Transporter mit einer Tour je Schicht, deterministische Fahrzeiten, Ereignisse unabhängig je "
         "Auftrag, Bindung ab Abfahrt. Die Erlöse und Strafen sind erfunden, nicht kalibriert: Gewinne sind Größenordnungen.",
         "Kosten je Planänderung werden nur nachträglich in der Netto-Rechnung angesetzt; sie sind nicht der Reglerparameter lambda (Entscheidungsstrafe).",
-        f"Ein einzelner Tag streut stark; die Aussage tragen die vorgerechneten Messreihen ({C.MEASURED_N} Tage je Zelle für die Stabilität, "
+        f"Ein einzelner Tag streut stark; die Aussage belegen die vorgerechneten Messreihen ({C.MEASURED_N} Tage je Zelle für die Stabilität, "
         f"{C.SAMEDAY_N} Tage für die Annahme).",
     ]:
         pdf.multi_cell(0, 5, pdf_text("- " + text), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
