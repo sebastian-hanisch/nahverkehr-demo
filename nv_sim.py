@@ -171,7 +171,7 @@ def simulate_rollout(inst: Inst, S: int = 16, base: str = "P1p", ls: bool = Fals
 
 
 # =====================================================================================================================
-# Ereignissimulation mit Aenderungen/Stornos, Stabilitaetsmassen und Neuplanungs-Politiken
+# Ereignisdiskrete Simulation mit Aenderungen/Stornos, Stabilitaetsmassen und Neuplanungs-Politiken
 # =====================================================================================================================
 
 ETA_TOL = 15   # Kundenseitig: angekuendigte Ankunftszeit gilt als geaendert, wenn sie um mehr als 15 min abweicht

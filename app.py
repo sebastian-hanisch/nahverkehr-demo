@@ -288,7 +288,7 @@ with st.expander("🔧 Wie wir das erreichen – Politiken im Vergleich"):
     tabs = st.tabs(["📅 Tagesverlauf", "📊 Politiken", "🎯 Orakel (vorgerechnet)", "📈 Messreihe"])
     with tabs[0]:
         st.markdown(
-            "Der **Tagesverlauf** ist eine Ereignissimulation: neue Aufträge, Änderungen und Stornos treffen nacheinander ein. Bei jedem Ereignis macht **jede** Politik denselben **Basisschritt** (Einfügen an der billigsten machbaren "
+            "Der **Tagesverlauf** ist eine ereignisdiskrete Simulation: neue Aufträge, Änderungen und Stornos treffen nacheinander ein. Bei jedem Ereignis macht **jede** Politik denselben **Basisschritt** (Einfügen an der billigsten machbaren "
             "Stelle, bei einer Änderung minimale Reparatur an derselben Stelle, sonst billigste Einfügung anderswo, bei einem Storno Entfernen); danach folgt je Politik ein **Neuoptimierungsschritt** (lokale Suche über den noch nicht "
             "gefahrenen Teil). Was schon losgefahren sein muss, ist **bindend** und bleibt unberührt. Unten die Ereignisse der gezeigten Politik mit den Änderungen je Ereignis."
         )

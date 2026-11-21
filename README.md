@@ -54,7 +54,7 @@ gemessenen Gewinn:** sie werden nachträglich als Netto-Tabelle angesetzt (Netto
 
 ## Methodik
 
-- **Ereignissimulation** (`nv_sim.py`): jedes Ereignis bekommt bei **jeder** Politik denselben Basisschritt (Einfügen an der billigsten machbaren Stelle, minimale Reparatur bei einer Änderung, Entfernen bei einem Storno); danach folgt je Politik ein
+- **Ereignisdiskrete Simulation** (`nv_sim.py`): jedes Ereignis bekommt bei **jeder** Politik denselben Basisschritt (Einfügen an der billigsten machbaren Stelle, minimale Reparatur bei einer Änderung, Entfernen bei einem Storno); danach folgt je Politik ein
   Neuoptimierungsschritt (lokale Suche Relocate, Swap, 2-opt, 2-opt\* über den noch nicht gefahrenen Teil, nur strikte Verbesserungen). Gleichstände erzeugen nie Änderungen.
 - **Vergleich der Regler** über die Kurve Gewinn gegen Änderungen, gepaart auf denselben Tagen, Mittel ± Standardfehler, Bootstrap (300 Ziehungen) für die Anteile am R-Gewinn bei 25 / 50 / 75 % der R-Änderungen.
 - **Drei Stabilitätsmaße**, damit die Aussage nicht am Maß hängt; **Netto-Tabelle** je Kosten je Änderung; **Urteil in drei Zuständen** (Mittel mehr als 2 Standardfehler von 0).

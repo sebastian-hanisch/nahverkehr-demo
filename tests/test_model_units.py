@@ -559,7 +559,7 @@ def test_fleet_to_trips_and_offline_profit():
 
 
 # ---------------------------------------------------------------------------------------------------
-# Ereignissimulation: Zähler, Reparatur, Orakel-Fenster
+# Ereignisdiskrete Simulation: Zähler, Reparatur, Orakel-Fenster
 # ---------------------------------------------------------------------------------------------------
 def test_snapshot_and_count_changes():
     inst, (A, B, C) = line_instance()
