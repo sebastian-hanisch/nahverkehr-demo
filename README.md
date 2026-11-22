@@ -41,7 +41,7 @@ Die App folgt dem Detailplan (`plan_nahverkehr.html`, Arbeitspakete 0 bis 7; die
 ## Modell
 
 60 × 60 km, Depot in der Mitte, **3 Transporter** mit einer Tour je Schicht, Fahrzeit = Entfernung × 1,2 min/km (aufgerundet), Service 6 min je Stopp, Schichtende nach 480 min. **Morgenplan:** 40 Aufträge (Auslastung 0,70) mit Zeitfenstern von 180 min,
-Einfüge-Heuristik plus lokale Suche, von OR-Tools verbessert (deterministisch über eine Lösungszahl, nicht über Zeit). **Neue Aufträge:** Poisson, Standard 6 je Stunde im Fenster [1, 300] min, Frist 120 min nach Eingang, Erlös lognormal (Mittel 60, σ 0,6);
+Einfüge-Heuristik plus lokale Suche, von OR-Tools verbessert (deterministisch über ein Lösungslimit, nicht über ein Zeitlimit). **Neue Aufträge:** Poisson, Standard 6 je Stunde im Fenster [1, 300] min, Frist 120 min nach Eingang, Erlös lognormal (Mittel 60, σ 0,6);
 sofortige, verbindliche Annahme oder Ablehnung (abgelehnt = entfällt). **Annahmeregeln:** P0 nie annehmen, P1 annehmen wenn machbar, P1p wenn machbar und Erlös ≥ Fahrt-Zusatzkosten, P2 Zeit-Schattenpreis (Schwelle µ aus der Route, kalibriert auf getrennten Seeds),
 je mit und ohne Neuoptimierung (L). **Änderungsereignisse:** je Auftrag mit Wahrscheinlichkeit 0,25 eine Änderung (Zeitfenster ±30 min oder Adresse im Umkreis 5 km) und 0,08 ein Storno, im Mittel 22,6 Ereignisse je Tag; ein Ereignis wirkt nur auf
 einen noch nicht bindenden Auftrag (bindend: das Fahrzeug muss spätestens losgefahren sein). Wird ein geänderter Auftrag an seiner Stelle unzulässig, wird er billigst anderswo eingefügt, sonst gescheitert (Erlös weg, Strafe 60). **Neuplanungs-Regler:**
@@ -75,7 +75,7 @@ Alle Zahlen stehen in `data/nv_results.json` und werden in `tests/test_claims.py
 | Kommt der Nutzen von den Änderungen? | **Nein, von den neuen Aufträgen:** ohne jedes Änderungsereignis bringt R +84,7 ± 9,5, mit Änderungen und Stornos +123,0, bei Rate 0 (nur Änderungen und Stornos) nur +10,8. |
 | Was kosten Änderungen und Stornos selbst? | Der Tag verliert gegenüber demselben Tag ohne Ereignisse mit S0 228 ± 12, mit R 190 ± 13; Neuplanung holt davon 38 ± 13 (17 %) zurück. Reine Stornos: Neuplanung hilft nicht (−6 ± 15). |
 | Welche Annahmeregel? | Gewinn gegenüber „nie annehmen“ (60 Tage): P1 618 ± 29, P1p 706 ± 28, **Zeit-Schattenpreis P2 758 ± 33**; P2 − P1p = +51 ± 13, die reine Erlös-Schwelle à la Littlewood P2v − P1p = −14 ± 11 (überträgt sich nicht auf das Straßennetz); Neuoptimieren P1pL − P1p = +77 ± 14, Schwelle auf Neuoptimierung P2L − P1pL = +15 ± 16 (nicht nachweisbar). |
-| Wie groß ist der Rest zum Rückblick-Orakel? | Annahme (16 Instanzen): Orakel 1175 ± 81, die je Instanz beste Online-Regel holt 836, Lücke 339 ± 53; nach Frist 45 / 90 / 180 / 300 min holt sie 54 / 64 / 82 / 91 % des Orakels. Mit Änderungen (10 Instanzen): Lücke zu R 582 ± 102 (20 % des Orakel-Gewinns), überwiegend Information über künftige Aufträge, nicht Stabilität. |
+| Wie groß ist der Rest zum Hindsight-Orakel? | Annahme (16 Instanzen): Orakel 1175 ± 81, die je Instanz beste Online-Regel holt 836, Lücke 339 ± 53; nach Frist 45 / 90 / 180 / 300 min holt sie 54 / 64 / 82 / 91 % des Orakels. Mit Änderungen (10 Instanzen): Lücke zu R 582 ± 102 (20 % des Orakel-Gewinns), überwiegend Information über künftige Aufträge, nicht Stabilität. |
 | Trägt ein fest kalibrierter Schwellenwert? | Nein: die in der Basiszelle kalibrierte Schwelle in andere Regime übertragen kippt das Vorzeichen (16 Morgenaufträge: P2 − P1p = −97 ± 26, kalibriert +0 ± 0). |
 
 ## Ehrliche Grenzen

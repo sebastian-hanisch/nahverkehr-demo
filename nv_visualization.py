@@ -261,11 +261,11 @@ def accept_live_figure(res):
 
 
 def accept_measured_figure(bars):
-    """Annahme-Messreihe: Mittel ± Standardfehler je Regel und das Rückblick-Orakel (grau); bars aus nv_results.accept_bars."""
+    """Annahme-Messreihe: Mittel ± Standardfehler je Regel und das Hindsight-Orakel (grau); bars aus nv_results.accept_bars."""
     import plotly.graph_objects as go
 
     fig = go.Figure()
-    for is_oracle, name, color in ((False, "Online-Regel", C.COLOR_P), (True, "Rückblick-Orakel (Heuristik)", C.COLOR_S0)):
+    for is_oracle, name, color in ((False, "Online-Regel", C.COLOR_P), (True, "Hindsight-Orakel (Heuristik)", C.COLOR_S0)):
         sel = [b for b in bars if (b[0] == "Orakel") == is_oracle]
         if not sel:
             continue

@@ -73,7 +73,7 @@ ohne Geometrie zeigt `revenue-management-demo`. Wie das Modell funktioniert, ste
 with st.expander("💬 In einfachen Worten"):
     st.markdown(
         """
-Im Nahverkehr steht der Plan am Morgen, doch der Tag hält sich nicht daran. Neue Aufträge kommen herein, Kunden ändern Zeiten oder Adressen, andere sagen ab. Die Demo spielt so einen Tag durch. Sie vergleicht, welche neuen Aufträge man annimmt und wie viel man den Plan danach neu ordnet. Jeder umgesteckte Stopp kostet etwas, denn Fahrer und Kunden müssen es erfahren. Gezeigt wird ein einzelner Tag, und der streut stark. Die Aussage tragen die vorgerechneten Messreihen über viele Beispieltage. Neuplanung bringt im Beispielmodell nur einen kleinen Gewinn, und eine Strafe je Änderung in der Entscheidung holt davon im Mittel das meiste mit weniger Änderungen. Alle Zahlen sind erfunden und stark vereinfacht. Sie zeigen Richtung und Reihenfolge, keine Werte eines echten Betriebs.
+Im Nahverkehr steht der Plan am Morgen, doch der Tag hält sich nicht daran. Neue Aufträge kommen herein, Kunden ändern Zeiten oder Adressen, andere sagen ab. Die Demo spielt so einen Tag durch. Sie vergleicht, welche neuen Aufträge man annimmt und wie viel man den Plan danach neu ordnet. Jeder umgesteckte Stopp kostet etwas, denn Fahrer und Kunden müssen es erfahren. Gezeigt wird ein einzelner Tag, und der streut stark. Die Aussage belegen die vorgerechneten Messreihen über viele Beispieltage. Neuplanung bringt im Beispielmodell nur einen kleinen Gewinn, und eine Strafe je Änderung in der Entscheidung holt davon im Mittel das meiste mit weniger Änderungen. Alle Zahlen sind erfunden und stark vereinfacht. Sie zeigen Richtung und Reihenfolge, keine Werte eines echten Betriebs.
 
 [Ausführlich und verständlich erklärt, mit Fachteil](https://sebastianhanisch.net/same-day-auftraege-erklaert.html)
         """
@@ -302,7 +302,7 @@ with st.expander("🔧 Wie wir das erreichen – Politiken im Vergleich"):
         st.caption("S0 hat bei (a) und (c) per Definition 0 (sie ändert nie andere Stopps), bei (b) nicht: Einfügungen verschieben auch bei S0 angesagte Zeiten. Ein einzelner Tag: Unterschiede zwischen Politiken sind hier oft null, "
                    "weil auf einem Tag nur wenige Züge zur Wahl stehen – die Messreihe belegt die Aussage.")
     with tabs[2]:
-        st.markdown("Das **Rückblick-Orakel** kennt alle Ereignisse vorab (Prize-Collecting-Tourenplanung mit OR-Tools). Es wird **nie live** gerechnet (25 bis 70 Sekunden je Instanz), hier stehen nur die vorgerechneten Zahlen.")
+        st.markdown("Das **Hindsight-Orakel** kennt alle Ereignisse vorab (Prize-Collecting-Tourenplanung mit OR-Tools). Es wird **nie live** gerechnet (25 bis 70 Sekunden je Instanz), hier stehen nur die vorgerechneten Zahlen.")
         st.markdown("**Mit Änderungen** (Stabilitäts-Messreihe, 10 Instanzen je Zelle):")
         st.dataframe(UI.oracle_frame(DATA), width="stretch", hide_index=True)
         st.markdown("**Annahme nach Frist** (16 Instanzen je Zelle):")
@@ -327,7 +327,7 @@ with st.expander("Wie funktioniert diese Demo?"):
     st.markdown(
         f"""
 **Basis.** Wie in der `vrp_demo`: ein Depot in der Mitte eines 60 × 60 km großen Gebiets, {CFG.K} Transporter mit einer Tour je Schicht, Fahrzeit = Entfernung × {CFG.speed:.1f} min/km (aufgerundet), Service {CFG.svc} min je Stopp,
-Schichtende nach {CFG.H} min. Der **Morgenplan** (Aufträge mit Zeitfenstern von {CFG.win_w} min) entsteht mit Einfüge-Heuristik und lokaler Suche und wird von OR-Tools verbessert (deterministisch über eine Lösungszahl, nicht über Zeit).
+Schichtende nach {CFG.H} min. Der **Morgenplan** (Aufträge mit Zeitfenstern von {CFG.win_w} min) entsteht mit Einfüge-Heuristik und lokaler Suche und wird von OR-Tools verbessert (deterministisch über ein Lösungslimit, nicht über ein Zeitlimit).
 
 **Neue Aufträge.** Poisson-verteilt im Fenster der ersten {CFG.t_arr} Minuten, Frist wie eingestellt, Erlös lognormal (Mittel {CFG.rev_mean:.0f}, Streuung {CFG.sigma}). Sofortige, verbindliche Annahme oder Ablehnung. **Änderungen und Stornos:** je Auftrag mit
 der eingestellten Wahrscheinlichkeit eine **Änderung** (Zeitfenster ±30 min oder Adresse im Umkreis von 5 km) oder ein **Storno**, im Basisfall im Mittel {F.fmt_num(_BASE['n_events'])} Ereignisse je Tag. Ein Ereignis wirkt nur auf einen noch nicht bindenden Auftrag
@@ -390,7 +390,7 @@ with st.expander("📐 Mathematische Formulierung"):
 **Ereignisse und Plan.** Ereignis $e$ zur Zeit $t_e$: Auftrag $i$ neu (Erlös $r_i$, Frist $\delta$), geändert ($i \to i'$ mit neuen Attributen) oder storniert. Der Plan $x_t$ besteht aus den Touren der noch nicht gefahrenen Stopps; ein Stopp $j$ ist
 bindend, sobald $S_j - T_{\mathrm{prev}(j),j} \le t$.
 
-**Annahme.** Nimm $i$ an, wenn ein zulässiger Einfügeplatz existiert und
+**Annahme.** Nimm $i$ an, wenn eine zulässige Einfügeposition existiert und
 $$r_i \ge \Delta c_i \;\;(\text{P1p}),\qquad r_i \ge \Delta c_i + \mu\, w(t)\, \Delta e_i \;\;(\text{P2}),\qquad w(t) = 1 - t/300,$$
 mit den Zusatzfahrminuten $\Delta c_i$ und der zusätzlichen Rückkehrzeit $\Delta e_i$ des gewählten Fahrzeugs; $\mu$ kommt aus einer Kalibriertabelle je Zelle.
 

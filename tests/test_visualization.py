@@ -137,7 +137,7 @@ def test_accept_figures():
     sd = DATA["sameday"]["cells"][0]
     fig = build(V.accept_measured_figure, R.accept_bars(sd))
     check_common(fig)
-    assert [t.name for t in fig.data] == ["Online-Regel", "Rückblick-Orakel (Heuristik)"]
+    assert [t.name for t in fig.data] == ["Online-Regel", "Hindsight-Orakel (Heuristik)"]
     assert list(fig.data[0].x) == ["P1", "P1p", "P2", "P1pL", "P2L", "P4L"] and list(fig.data[1].x) == ["Orakel"]
     assert fig.data[1].y[0] == pytest.approx(sd["oracle"]["ORA"]["mean"]) and fig.data[1].error_y.array[0] == pytest.approx(sd["oracle"]["ORA"]["se"])
     no_ora = build(V.accept_measured_figure, [b for b in R.accept_bars(sd) if b[0] != "Orakel"])

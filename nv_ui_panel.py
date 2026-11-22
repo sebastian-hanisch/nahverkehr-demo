@@ -332,7 +332,7 @@ def calibration_frame(cell):
 
 
 def oracle_sameday_frame(data, group):
-    """Rest-Lücke zum Rückblick-Orakel der Annahme nach Frist oder Auslastung (nur vorgerechnet, 10 bis 16 Instanzen je Zelle)."""
+    """Rest-Lücke zum Hindsight-Orakel der Annahme nach Frist oder Auslastung (nur vorgerechnet, 10 bis 16 Instanzen je Zelle)."""
     rows = []
     for c in R.sameday_rows(data, group):
         o = c["oracle"]
